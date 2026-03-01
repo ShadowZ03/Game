@@ -1,0 +1,19 @@
+---
+id: start
+text: "You stand at the edge of the Whispering Forest."
+choices:
+  - text: "Enter the forest"
+    next: goblin_fight
+  - text: "Return home"
+    next: end
+
+---
+id: goblin_fight
+text: "A mischievous goblin jumps out!"
+combat: goblin
+next: end
+
+---
+id: end
+text: "Your adventure ends for today."
+choices: []
