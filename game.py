@@ -1,8 +1,9 @@
 from engine.character import Character
 from engine.combat import Combat
 from engine.story import StoryEngine
-
+from engine.monster_loader import load_monsters
 from engine.character_loader import load_characters
+from engine.ability_loader import load_abilities
 
 def choose_character():
     characters = load_characters("content/characters.yaml")
@@ -20,7 +21,9 @@ def main():
     player = choose_character()
     story = StoryEngine("content/chapter1.yaml")
     combat = Combat()
-
+    monsters = load_monsters("content/monsters.yaml")
+    abilities = load_abilities("content/abilities.yaml")
+    
     current_node = "start"
 
     while current_node:
@@ -30,10 +33,29 @@ def main():
 
         # Handle combat
         if "combat" in node:
-            monster = Character("Goblin", hp=10, attack_bonus=1)
-            combat.battle(player, monster)
+            monster_id = node["combat"]
 
+            if monster_id not in monsters:
+                raise ValueError(f"Monster '{monster_id}' not found.")
+
+            monster_template = monsters[monster_id]
+
+            # Clone monster so stats reset each fight
+            monster = Character(
+            name=monster_template.name,
+            hp=monster_template.max_hp,
+            attack_bonus=monster_template.attack_bonus,
+            abilities=list(monster_template.abilities)
+            )
+            
+            monster.xp_reward = getattr(monster_template, "xp_reward", 5)
+            
+            combat.battle(player, monster, abilities)
             current_node = node.get("next")
+            rest_choice = input("Rest at campfire? (y/n): ")
+
+            if rest_choice.lower() == "y":
+                player.rest()
             continue
 
         # Handle choices
@@ -48,7 +70,5 @@ def main():
         current_node = choices[selection]["next"]
 
     print("\n🌟 Thanks for playing!")
-
-
 if __name__ == "__main__":
     main()

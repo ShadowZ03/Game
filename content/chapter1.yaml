@@ -11,6 +11,12 @@ choices:
 id: goblin_fight
 text: "A mischievous goblin jumps out!"
 combat: goblin
+next: slime_fight
+
+---
+id: slime_fight
+text: "A wobbly slime blocks your path!"
+combat: slime
 next: end
 
 ---

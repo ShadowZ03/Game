@@ -2,13 +2,19 @@
   name: "Spark Knight"
   hp: 20
   attack_bonus: 2
+  abilities:
+    - power_strike
 
 - id: forest_mage
   name: "Forest Mage"
   hp: 15
   attack_bonus: 4
+  abilities:
+    - fireball
 
 - id: beast_friend
   name: "Beast Friend"
   hp: 25
   attack_bonus: 1
+  abilities:
+    - heal_friend

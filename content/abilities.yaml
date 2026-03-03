@@ -1,0 +1,43 @@
+- id: power_strike
+  name: "Power Strike"
+  type: damage
+  recharge_roll: 3
+  damage_die: 8
+  description: "A mighty glowing sword strike!"
+
+- id: fireball
+  name: "Fireball"
+  type: damage
+  recharge_roll: 1
+  damage_die: 10
+  description: "A blazing ball of magical fire!"
+
+- id: heal_friend
+  name: "Beast Heal"
+  type: heal
+  recharge_roll: 5
+  heal_die: 8
+  description: "Your beast friend restores your strength!"
+
+# Enemy abilities
+
+- id: sneaky_stab
+  name: "Sneaky Stab"
+  type: damage
+  recharge_roll: 3
+  damage_die: 6
+  description: "The goblin darts forward with a sneaky stab!"
+
+- id: slime_splash
+  name: "Slime Splash"
+  type: damage
+  recharge_roll: 3
+  damage_die: 4
+  description: "Sticky slime splashes everywhere!"
+
+- id: howl
+  name: "Fierce Howl"
+  type: damage
+  recharge_roll: 3
+  damage_die: 6
+  description: "The wolf lets out a fierce howl and lunges!"

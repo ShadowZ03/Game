@@ -1,0 +1,23 @@
+- id: goblin
+  name: "Goblin"
+  hp: 10
+  attack_bonus: 1
+  abilities:
+    - sneaky_stab
+  xp_reward: 5
+
+- id: slime
+  name: "Wobbly Slime"
+  hp: 8
+  attack_bonus: 0
+  abilities:
+    - slime_splash
+  xp_reward: 3
+
+- id: wolf
+  name: "Forest Wolf"
+  hp: 14
+  attack_bonus: 2
+  abilities:
+    - howl
+  xp_reward: 8
