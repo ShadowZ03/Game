@@ -5,6 +5,7 @@
   abilities:
     - sneaky_stab
   xp_reward: 5
+  image: goblin
 
 - id: slime
   name: "Wobbly Slime"
@@ -13,6 +14,7 @@
   abilities:
     - slime_splash
   xp_reward: 3
+  image: slime
 
 - id: wolf
   name: "Forest Wolf"
@@ -21,3 +23,14 @@
   abilities:
     - howl
   xp_reward: 8
+  image: wolf
+
+- id: bone_pile
+  name: "Bone Pile"
+  hp: 10 
+  attack_bonus: 2
+  abilities:
+    - bone_magic
+    - bone_hammer
+  xp_reward: 12
+  image: bone_pile

@@ -18,3 +18,11 @@
   attack_bonus: 1
   abilities:
     - heal_friend
+
+- id: brown_hunter
+  name: "Brown Hunter"
+  hp: 20
+  attack_bonus: 3
+  abilities:
+    - long_shot
+    - heal_friend

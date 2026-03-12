@@ -1,37 +1,38 @@
 from engine.dice import roll
+from engine import media
 import random
+
 
 class Combat:
 
     def basic_attack(self, attacker, defender):
-        d20 = roll(20)
-        total = d20 + attacker.attack_bonus
-
-        print(f"{attacker.name} rolls a {d20}!")
-
+        d20    = roll(20)
+        total  = d20 + attacker.attack_bonus
         if total >= 10:
             damage = roll(6)
-            defender.hp -= damage
-            defender.hp = max(0, defender.hp)
-            return f"{attacker.name} hits for {damage} damage!"
+            defender.hp = max(0, defender.hp - damage)
+            media.play_sound("basic_attack")
+            return f"🗡  {attacker.name} rolls {d20} — hits for {damage} damage!"
         else:
-            return f"{attacker.name} misses!"
+            media.play_sound("miss")
+            return f"💨  {attacker.name} rolls {d20} — misses!"
 
     def use_ability(self, attacker, defender, ability_id, ability_data):
-        print(f"\n✨ {ability_data['description']}")
+        media.play_sound(ability_data.get("sound", ability_id))
+        desc = ability_data["description"]
 
         if ability_data["type"] == "damage":
             damage = roll(ability_data["damage_die"])
-            defender.hp -= damage
-            defender.hp = max(0, defender.hp)
-            result = f"It deals {damage} damage!"
+            defender.hp = max(0, defender.hp - damage)
+            result = f"✨ {desc}\n   It deals {damage} damage!"
 
         elif ability_data["type"] == "heal":
             heal = roll(ability_data["heal_die"])
             attacker.hp = min(attacker.max_hp, attacker.hp + heal)
-            result = f"You heal for {heal} HP!"
+            result = f"✨ {desc}\n   You heal for {heal} HP!"
+        else:
+            result = f"✨ {desc}"
 
-        # Start recharge AFTER ability is used
         if "recharge_roll" in ability_data:
             attacker.start_recharge(ability_id)
 
@@ -42,73 +43,80 @@ class Combat:
 
         if monster.abilities and random.random() < 0.4:
             ability_id = random.choice(monster.abilities)
-
             if monster.is_recharging(ability_id):
-                print(self.basic_attack(monster, player))
-                return
-
+                return self.basic_attack(monster, player)
             ability_data = abilities_db[ability_id]
-            print(self.use_ability(monster, player, ability_id, ability_data))
+            return self.use_ability(monster, player, ability_id, ability_data)
         else:
-            print(self.basic_attack(monster, player))
+            return self.basic_attack(monster, player)
 
     def battle(self, player, monster, abilities_db):
-        print(f"\n⚔ A wild {monster.name} appears!\n")
+        # Monster image becomes the battle backdrop
+        if hasattr(monster, "image") and monster.image:
+            media.set_scene(monster.image)
+
+        media.show_message([f"⚔  A wild {monster.name} appears!"])
 
         while player.is_alive() and monster.is_alive():
+            recharge_msgs = player.attempt_recharge(abilities_db)
+            if recharge_msgs:
+                media.show_message(recharge_msgs)
 
-            # Attempt recharge at start of player turn
-            player.attempt_recharge(abilities_db)
+            # Build choice labels
+            options    = ["⚔  Basic Attack"]
+            recharging = [False]
+            for ability_id in player.abilities:
+                ab  = abilities_db[ability_id]
+                rec = player.is_recharging(ability_id)
+                options.append(ab["name"])
+                recharging.append(rec)
 
-            print("\nChoose your action:")
-            print("1. Basic Attack")
+            status = (f"{player.name}: {player.hp}/{player.max_hp} HP  •  "
+                      f"{monster.name}: {monster.hp}/{monster.max_hp} HP")
 
-            for i, ability_id in enumerate(player.abilities, start=2):
-                ability = abilities_db[ability_id]
+            choice = media.prompt_choices(status, options, recharging=recharging)
 
-                if player.is_recharging(ability_id):
-                    print(f"{i}. {ability['name']} (Recharging...)")
-                else:
-                    print(f"{i}. {ability['name']}")
-
-            # Input validation
-            while True:
-                try:
-                    choice = int(input("> "))
-                    if 1 <= choice <= 1 + len(player.abilities):
-                        break
-                    else:
-                        print("Choose a valid option!")
-                except ValueError:
-                    print("Please enter a number!")
-
-            if choice == 1:
-                print(self.basic_attack(player, monster))
+            # Execute player action
+            if choice == 0:
+                result = self.basic_attack(player, monster)
             else:
-                ability_id = player.abilities[choice - 2]
-
+                ability_id = player.abilities[choice - 1]
                 if player.is_recharging(ability_id):
-                    print("⚡ That ability is still recharging!")
+                    media.show_message(["⚡ That ability is still recharging!"])
                     continue
+                result = self.use_ability(player, monster, ability_id, abilities_db[ability_id])
 
-                ability_data = abilities_db[ability_id]
-                print(self.use_ability(player, monster, ability_id, ability_data))
+            lines = [result]
 
+            # Enemy turn
             if monster.is_alive():
-                self.enemy_turn(monster, player, abilities_db)
+                enemy_result = self.enemy_turn(monster, player, abilities_db)
+                lines += ["", f"👹 {monster.name}'s turn:", enemy_result]
 
-            print(f"\n{player.name}: {player.hp} HP")
-            print(f"{monster.name}: {monster.hp} HP\n")
+            lines += [
+                "",
+                f"{player.name}: {player.hp}/{player.max_hp} HP",
+                f"{monster.name}: {monster.hp}/{monster.max_hp} HP",
+            ]
+            media.show_message(lines)
 
         if player.is_alive():
-            print("🎉 You won the battle!")
-
-            if hasattr(monster, "xp_reward"):
-                player.gain_xp(monster.xp_reward)
-
-            print(f"{player.name}: Level {player.level}, HP {player.hp}, XP {player.xp}/{player.next_level_xp}")
+            media.play_sound("victory")
+            xp = getattr(monster, "xp_reward", 0)
+            old_level = player.level
+            player.gain_xp(xp)
+            lines = [f"🎉 You defeated {monster.name}!",
+                     f"   +{xp} XP"]
+            if player.level > old_level:
+                lines += ["", f"🎊 LEVEL UP!  Now Level {player.level}",
+                          f"   +5 HP, +1 ATK"]
+            lines += ["", f"{player.name}: Level {player.level}  "
+                         f"HP {player.hp}  XP {player.xp}/{player.next_level_xp}"]
+            media.show_message(lines)
             return True
         else:
-            print("💤 You fainted... but wake up safely at camp.")
+            media.play_sound("game_over")
             player.heal_full()
+            media.show_message(["💤 You fainted...",
+                                 "   You wake up safely at camp."])
             return False

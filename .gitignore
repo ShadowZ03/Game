@@ -1,2 +1,21 @@
-*/venv/*
-__pycache__/*
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Compiled Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Generated / placeholder assets (remove these lines if you want to commit your real assets)
+assets/
+
+# OS clutter
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/

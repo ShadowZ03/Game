@@ -1,6 +1,8 @@
 ---
 id: start
 text: "You stand at the edge of the Whispering Forest."
+image: forest_edge
+sound: forest_edge
 choices:
   - text: "Enter the forest"
     next: goblin_fight
@@ -10,16 +12,68 @@ choices:
 ---
 id: goblin_fight
 text: "A mischievous goblin jumps out!"
+image: goblin_fight
+sound: goblin_fight
 combat: goblin
 next: slime_fight
 
 ---
+id: exploring1
+text: "You stand in the trees of the Whispering Forest."
+choices:
+  - text: "Continue through the forest?"
+    next: slime_fight
+  - text: "Return home"
+    next: end
+
+---
 id: slime_fight
 text: "A wobbly slime blocks your path!"
+image: slime_fight
+sound: slime_fight
 combat: slime
+next: exploring2
+
+---
+id: exploring2
+text: "All the noise will likely attract a wolf."
+image: deep_forest
+sound: deep_forest
+choices:
+  - text: "Dare you continue forward?"
+    next: wolf_fight
+  - text: "Return home"
+    next: wolf_fight
+    
+---
+id: wolf_fight
+text: "A shabby wolf is checking out the noise!"
+image: wolf_fight
+sound: wolf_fight
+combat: wolf
+next: exploring3
+
+---
+id: exploring3
+text: "All is quiet in the woods. Until..."
+image: deep_forest
+sound: deep_forest
+choices:
+  - text: "Creaking noises come from the wolf. (Investigate)"
+    next: bone_pile_fight
+  - text: "Return home"
+    next: end
+
+---
+id: bone_pile_fight
+text: "The Wolf Transformed into a fearsome BONE PILE!!!!"
+image: bone_pile
+sound: wolf_fight
+combat: bone_pile
 next: end
 
 ---
 id: end
 text: "Your adventure ends for today."
+image: end_scene
 choices: []
