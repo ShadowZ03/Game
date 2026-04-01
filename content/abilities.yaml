@@ -31,7 +31,7 @@
   sound: howl
 
 # Enemy abilities
-
+gi
 - id: sneaky_stab
   name: "Sneaky Stab"
   type: damage

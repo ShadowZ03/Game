@@ -1,0 +1,142 @@
+---
+id: start
+text: "You awaken in a warm room of a tavern. Music is playing downstairs to the sound of happiness."
+image: tavern_room
+sound: music
+choices:
+  - text: "Rest some more"
+    next: start
+  - text: "Head down stairs"
+    next: tavern
+
+---
+id: tavern
+text: "There's a bard singing and the crowd is cheering. The Barkeep is tending to orders. A mysterious cloaked figure sits in a dark corner of the tavern."
+choices:
+  - text: "Enjoy the tavern."
+    next: tavern
+  - text: "Talk with the Barkeep."
+    next: barkeep
+  - text: "Head outside."
+    next: streets
+
+---
+id: barkeep
+text: "The Barkeep, looking jolly, shouts above the tavern noise: What can I do for ya?"
+image: barkeep
+  - text: "Can I have some food and drink please?"
+    next: eat
+  - text: "Who's the mysterious guy over there?"
+    next: question_one
+  - text: "Any rumors?"
+    next: question_two
+
+---
+id: eat
+text: "The Barkeep says 'Sure do! Here ya go. Enjoy!' As you have your fill, you ponder your next move..."
+image: tavern_food
+  - text: "Ask the Barkeep another question"
+    next: barkeep
+  - text: "Approach the mysterious figure. 'Who are you?'"
+    next: mysterious_cloak
+  - text: "Head out for a walk"
+    next: streets
+
+---
+id: question_one
+text: "Who him? I do not know. Just showed up overnight. I don't like 'em though, but they got gold so I cannot complain"
+image: barkeep
+  - text: "Approach the mysterious figure. 'Who are you?'"
+    next: mysterious_cloak
+  - text: "Any rumors?"
+    next: question_two
+  - text: "Time to get going"
+    next: streets
+
+---
+id: question_two
+
+---
+id: mysterious_cloak
+
+---
+id: streets
+
+
+
+image: goblin_fight
+sound: goblin_fight
+combat: goblin
+next: slime_fight
+
+
+
+
+---
+id: goblin_fight
+text: "A mischievous goblin jumps out!"
+image: goblin_fight
+sound: goblin_fight
+combat: goblin
+next: slime_fight
+
+---
+id: exploring1
+text: "You stand in the trees of the Whispering Forest."
+choices:
+  - text: "Continue through the forest?"
+    next: slime_fight
+  - text: "Return home"
+    next: end
+
+---
+id: slime_fight
+text: "A wobbly slime blocks your path!"
+image: slime_fight
+sound: slime_fight
+combat: slime
+next: exploring2
+
+---
+id: exploring2
+text: "All the noise will likely attract a wolf."
+image: deep_forest
+sound: deep_forest
+choices:
+  - text: "Dare you continue forward?"
+    next: wolf_fight
+  - text: "Return home"
+    next: wolf_fight
+    
+---
+id: wolf_fight
+text: "A shabby wolf is checking out the noise!"
+image: wolf_fight
+sound: wolf_fight
+combat: wolf
+next: exploring3
+
+---
+id: exploring3
+text: "All is quiet in the woods. Until..."
+image: deep_forest
+sound: deep_forest
+choices:
+  - text: "Creaking noises come from the wolf. (Investigate)"
+    next: bone_pile_fight
+  - text: "Return home"
+    next: end
+
+---
+id: bone_pile_fight
+text: "The Wolf Transformed into a fearsome BONE PILE!!!!"
+image: bone_pile
+sound: wolf_fight
+combat: bone_pile
+next: end
+
+---
+id: end
+text: "Your adventure ends for today."
+image: end_scene
+choices: []
